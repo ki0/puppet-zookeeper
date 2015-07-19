@@ -5,6 +5,9 @@
 #
 # == Parameters
 #
+# [*pre_install_java*]
+#   Include java module for install
+#
 # Standard class parameters
 # Define the general class behaviour and customizations
 #

@@ -16,7 +16,7 @@ class zookeeper::params {
 
   ### Application related parameters
 
-  $install_prerequisites = true
+  $pre_install_java = true
 
   $package = $::operatingsystem ? {
     default => 'zookeeper',
