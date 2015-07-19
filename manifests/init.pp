@@ -5,12 +5,6 @@
 #
 # == Parameters
 #
-# [*install_prerequisites*]
-#   Set to false if you don't want install this module's prerequisites.
-#   (It may be useful if the resources provided the prerequisites are already
-#   managed by some other modules). Default: true
-#   Prerequisites are based on Example42 modules set.
-#
 # Standard class parameters
 # Define the general class behaviour and customizations
 #
@@ -205,8 +199,9 @@
 #
 # See README for usage patterns.
 #
+
 class zookeeper (
-  $install_prerequisites = params_lookup( 'install_prerequisites' ),
+  $pre_install_java      = params_lookup( 'pre_install_java' ),
   $my_class              = params_lookup( 'my_class' ),
   $source                = params_lookup( 'source' ),
   $source_dir            = params_lookup( 'source_dir' ),
@@ -250,7 +245,7 @@ class zookeeper (
   $protocol              = params_lookup( 'protocol' )
   ) inherits zookeeper::params {
 
-  $bool_install_prerequisites=any2bool($install_prerequisites)
+  $bool_pre_install_java=any2bool($pre_install_java)
   $bool_source_dir_purge=any2bool($source_dir_purge)
   $bool_service_autorestart=any2bool($service_autorestart)
   $bool_absent=any2bool($absent)
@@ -334,10 +329,8 @@ class zookeeper (
   }
 
   ### Managed resources
-  if $zookeeper::bool_install_prerequisites {
-    class { 'zookeeper::prerequisites':
-      require => Class['zookeeper::install'],
-    }
+  if $zookeeper::bool_pre_install_java {
+    include java
   }
 
   package { $zookeeper::package:
