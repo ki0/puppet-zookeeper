@@ -351,7 +351,7 @@ class zookeeper (
     noop       => $zookeeper::bool_noops,
   }
 
-  file { 'zookeeper.conf':
+  file { 'zoo.cfg':
     ensure  => $zookeeper::manage_file,
     path    => $zookeeper::config_file,
     mode    => $zookeeper::config_file_mode,

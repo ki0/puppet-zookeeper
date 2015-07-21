@@ -73,7 +73,7 @@ class zookeeper::params {
   }
 
   $data_dir = $::operatingsystem ? {
-    default => '/var/lib/zookeeper/data',
+    default => '/var/lib/zookeeper/',
   }
 
   $log_dir = $::operatingsystem ? {
