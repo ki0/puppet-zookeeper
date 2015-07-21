@@ -19,7 +19,8 @@ class zookeeper::params {
   $pre_install_java = true
 
   $package = $::operatingsystem ? {
-    default => 'zookeeper',
+    /(?i:Debian|Ubuntu|Mint)/ => 'zookeeperd',
+    default => 'zookeeperd',
   }
 
   $service = $::operatingsystem ? {
@@ -31,11 +32,11 @@ class zookeeper::params {
   }
 
   $process = $::operatingsystem ? {
-    default => 'zookeeper',
+    default => 'java',
   }
 
   $process_args = $::operatingsystem ? {
-    default => '',
+    default => 'zookeeper',
   }
 
   $process_user = $::operatingsystem ? {
@@ -43,11 +44,11 @@ class zookeeper::params {
   }
 
   $config_dir = $::operatingsystem ? {
-    default => '/etc/zookeeper',
+    default => '/etc/zookeeper/conf',
   }
 
   $config_file = $::operatingsystem ? {
-    default => '/etc/zookeeper/zookeeper.conf',
+    default => '/etc/zookeeper/conf/zoo.cfg',
   }
 
   $config_file_mode = $::operatingsystem ? {
@@ -72,7 +73,7 @@ class zookeeper::params {
   }
 
   $data_dir = $::operatingsystem ? {
-    default => '/etc/zookeeper',
+    default => '/var/lib/zookeeper/data',
   }
 
   $log_dir = $::operatingsystem ? {
@@ -83,7 +84,7 @@ class zookeeper::params {
     default => '/var/log/zookeeper/zookeeper.log',
   }
 
-  $port = '42'
+  $port = '2181'
   $protocol = 'tcp'
 
   # General Settings
