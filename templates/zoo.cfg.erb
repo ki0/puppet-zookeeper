@@ -1,0 +1,7 @@
+# File Managed by Puppet
+#
+tickTime=2000
+initLimit=10
+syncLimit=5
+dataDir=<%= scope.lookupvar('zookeeper::data_dir') %>
+clientPort=<%= scope.lookupvar('zookeeper::port') %>

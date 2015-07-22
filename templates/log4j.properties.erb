@@ -1,0 +1,34 @@
+# File Managed by Puppet
+#
+<% if scope.lookupvar('zookeeper::log_mode') == 'info' %>
+zookeeper.root.logger=INFO, ROLLINGFILE
+<% end -%>
+<% if scope.lookupvar('zookeeper::log_mode') == 'debug' %>
+zookeeper.root.logger=DEBUG, ROLLINGFILE
+<% end -%>
+<% if scope.lookupvar('zookeeper::log_mode') == 'trace' %>
+zookeeper.root.logger=TRACE, ROLLINGFILE
+<% end -%>
+zookeeper.log.dir=<%= scope.lookupvar('zookeeper::log_dir') %>
+zookeeper.log.file=<%= scope.lookupvar('zookeeper::log_file') %>
+zookeeper.log.threshold=DEBUG
+
+#
+# ZooKeeper Logging Configuration
+#
+
+log4j.rootLogger=${zookeeper.root.logger}
+
+log4j.appender.ROLLINGFILE=org.apache.log4j.RollingFileAppender
+log4j.appender.ROLLINGFILE.Threshold=${zookeeper.log.threshold}
+log4j.appender.ROLLINGFILE.File=${zookeeper.log.dir}/${zookeeper.log.file}
+
+# Max log file size of 10MB
+log4j.appender.ROLLINGFILE.MaxFileSize=10MB
+# uncomment the next line to limit number of backup files
+#log4j.appender.ROLLINGFILE.MaxBackupIndex=10
+
+log4j.appender.ROLLINGFILE.layout=org.apache.log4j.PatternLayout
+log4j.appender.ROLLINGFILE.layout.ConversionPattern=%d{ISO8601} [myid:%X{myid}] - %-5p [%t:%C{1}@%L] - %m%n
+
+
