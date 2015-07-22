@@ -16,11 +16,9 @@ class zookeeper::params {
 
   ### Application related parameters
 
-  $pre_install_java = true
-
   $package = $::operatingsystem ? {
     /(?i:Debian|Ubuntu|Mint)/ => 'zookeeperd',
-    default => 'zookeeperd',
+    default                   => 'zookeeper',
   }
 
   $service = $::operatingsystem ? {
@@ -44,11 +42,13 @@ class zookeeper::params {
   }
 
   $config_dir = $::operatingsystem ? {
-    default => '/etc/zookeeper/conf',
+    /(?i:Debian|Ubuntu|Mint)/ => '/etc/zookeeper/conf',
+    default                   => '/etc/zookeeper',
   }
 
   $config_file = $::operatingsystem ? {
-    default => '/etc/zookeeper/conf/zoo.cfg',
+    /(?i:Debian|Ubuntu|Mint)/ => '/etc/zookeeper/conf/zoo.cfg'
+    default                   => '/etc/zookeeper/zoo.cfg',
   }
 
   $config_file_mode = $::operatingsystem ? {
@@ -73,7 +73,8 @@ class zookeeper::params {
   }
 
   $data_dir = $::operatingsystem ? {
-    default => '/var/lib/zookeeper/',
+    /(?i:Debian|Ubuntu|Mint)/ => '/var/lib/zookeeper/data',
+    default                   => '/var/lib/zookeeper',
   }
 
   $log_dir = $::operatingsystem ? {
@@ -83,6 +84,25 @@ class zookeeper::params {
   $log_file = $::operatingsystem ? {
     default => '/var/log/zookeeper/zookeeper.log',
   }
+
+  $config_env_file = $::operatingsystem ? {
+    /(?i:Debian|Ubuntu:mint)/ => '/etc/zookeeper/conf/zookeeper-env.sh',
+    default                   => '/etc/zookeeper/zookeeper-env.sh'
+  }
+
+  $source_env_file = ''
+  $template_env_file = ''
+
+  $config_log_file = $::operatingsystem ? {
+    /(?i:Debian|Ubuntu:mint)/ => '/etc/zookeeper/conf/log4j.properties',
+    default                   => '/etc/zookeeper/log4j.properties'
+  }
+
+  $source_log_file = ''
+  $template_log_file = ''
+  $log_mode = 'info'
+
+  $pre_install_java = true
 
   $port = '2181'
   $protocol = 'tcp'

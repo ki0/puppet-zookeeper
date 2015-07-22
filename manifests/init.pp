@@ -4,6 +4,28 @@
 #
 #
 # == Parameters
+# Module's specific variables
+#
+# [*config_env_file*]
+#   Path to the environment file
+#
+# [*source_env_file*]
+#   Custom source file for env.sh
+#
+# [*template_env_file*]
+#   Custom template file for env.sh
+#
+# [*log_mode*]
+#   Logging mode: info, debug or trace (default: info)
+#
+# [*config_log_file*]
+#   Path to the environment file
+#
+# [*source_log_file*]
+#   Custom source file for env.sh
+#
+# [*template_log_file*]
+#   Custom template file for env.sh
 #
 # [*pre_install_java*]
 #   Include java module for install
@@ -204,6 +226,13 @@
 #
 
 class zookeeper (
+  $config_env_file       = params_lookup( 'config_env_file' ),
+  $source_env_file       = params_lookup( 'source_env_file' ),
+  $template_env_file     = params_lookup( 'template_env_file'),
+  $log_mode              = params_lookup( 'log_mode' ),
+  $config_log_file       = params_lookup( 'config_log_file' ),
+  $source_log_file       = params_lookup( 'source_log_file' ),
+  $template_log_file     = params_lookup( 'template_log_file' ),
   $pre_install_java      = params_lookup( 'pre_install_java' ),
   $my_class              = params_lookup( 'my_class' ),
   $source                = params_lookup( 'source' ),
@@ -331,6 +360,26 @@ class zookeeper (
     default   => template($zookeeper::template),
   }
 
+  $manage_env_file_source = $zookeeper::source_env_file ? {
+    ''        => undef,
+    default   => $zookeeper::source_env_file,
+  }
+
+  $manage_env_file_content = $zookeeper::template_env_file ? {
+    ''        => undef,
+    default   => template($zookeeper::template_env_file),
+  }
+
+  $manage_log_file_source = $zookeeper::source_log_file ? {
+    ''        => undef,
+    default   => $zookeeper::source_log_file,
+  }
+
+  $manage_log_file_content = $zookeeper::template_log_file ? {
+    ''        => undef,
+    default   => template($zookeeper::template_log_file),
+  }
+
   ### Managed resources
   if $zookeeper::bool_pre_install_java {
     include java
@@ -351,7 +400,7 @@ class zookeeper (
     noop       => $zookeeper::bool_noops,
   }
 
-  file { 'zoo.cfg':
+  file { 'zookeeper.conf':
     ensure  => $zookeeper::manage_file,
     path    => $zookeeper::config_file,
     mode    => $zookeeper::config_file_mode,
@@ -361,6 +410,36 @@ class zookeeper (
     notify  => $zookeeper::manage_service_autorestart,
     source  => $zookeeper::manage_file_source,
     content => $zookeeper::manage_file_content,
+    replace => $zookeeper::manage_file_replace,
+    audit   => $zookeeper::manage_audit,
+    noop    => $zookeeper::bool_noops,
+  }
+
+  file { 'zookeeper.env':
+    ensure  => $zookeeper::manage_file,
+    path    => $zookeeper::config_env_file,
+    mode    => $zookeeper::config_file_mode,
+    owner   => $zookeeper::config_file_owner,
+    group   => $zookeeper::config_file_group,
+    require => Package[$zookeeper::package],
+    notify  => $zookeeper::manage_service_autorestart,
+    source  => $zookeeper::manage_env_file_source,
+    content => $zookeeper::manage_env_file_content,
+    replace => $zookeeper::manage_file_replace,
+    audit   => $zookeeper::manage_audit,
+    noop    => $zookeeper::bool_noops,
+  }
+
+  file { 'zookeeper.log4j':
+    ensure  => $zookeeper::manage_file,
+    path    => $zookeeper::config_log_file,
+    mode    => $zookeeper::config_file_mode,
+    owner   => $zookeeper::config_file_owner,
+    group   => $zookeeper::config_file_group,
+    require => Package[$zookeeper::package],
+    notify  => $zookeeper::manage_service_autorestart,
+    source  => $zookeeper::manage_log_file_source,
+    content => $zookeeper::manage_log_file_content,
     replace => $zookeeper::manage_file_replace,
     audit   => $zookeeper::manage_audit,
     noop    => $zookeeper::bool_noops,
@@ -383,12 +462,10 @@ class zookeeper (
     }
   }
 
-
   ### Include custom class if $my_class is set
   if $zookeeper::my_class {
     include $zookeeper::my_class
   }
-
 
   ### Provide puppi data, if enabled ( puppi => true )
   if $zookeeper::bool_puppi == true {
@@ -400,7 +477,6 @@ class zookeeper (
       noop      => $zookeeper::bool_noops,
     }
   }
-
 
   ### Service monitoring, if enabled ( monitor => true )
   if $zookeeper::bool_monitor == true {
@@ -427,7 +503,6 @@ class zookeeper (
       }
     }
   }
-
 
   ### Firewall management, if enabled ( firewall => true )
   if $zookeeper::bool_firewall == true and $zookeeper::port != '' {
