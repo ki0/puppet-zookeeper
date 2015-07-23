@@ -47,7 +47,7 @@ class zookeeper::params {
   }
 
   $config_file = $::operatingsystem ? {
-    /(?i:Debian|Ubuntu|Mint)/ => '/etc/zookeeper/conf/zoo.cfg'
+    /(?i:Debian|Ubuntu|Mint)/ => '/etc/zookeeper/conf/zoo.cfg',
     default                   => '/etc/zookeeper/zoo.cfg',
   }
 
