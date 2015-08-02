@@ -91,7 +91,7 @@ class zookeeper::params {
   }
 
   $source_env_file = ''
-  $template_env_file = ''
+  $template_env_file = 'zookeeper/zookeeper-env.sh.erb'
 
   $config_log_file = $::operatingsystem ? {
     /(?i:Debian|Ubuntu:mint)/ => '/etc/zookeeper/conf/log4j.properties',
@@ -99,11 +99,24 @@ class zookeeper::params {
   }
 
   $source_log_file = ''
-  $template_log_file = ''
+  $template_log_file = 'zookeeper/log4j.properties.erb'
+
+  $config_myid_file = $::operatingsystem ? {
+    /(?i:Debian|Ubuntu:mint)/ => '/etc/zookeeper/conf/myid',
+    default                   => '/etc/zookeeper/myid'
+  }
+
+  $source_myid_file = ''
+  $template_myid_file = 'zookeeper/myid.erb'
+
+  $myid = ''
+  $servers = []
   $log_mode = 'info'
 
   $pre_install_java = true
 
+  $follower_port = '2888'
+  $leader_port = '3888'
   $port = '2181'
   $protocol = 'tcp'
 
@@ -112,7 +125,7 @@ class zookeeper::params {
   $source = ''
   $source_dir = ''
   $source_dir_purge = false
-  $template = ''
+  $template = 'zookeeper/zoo.cfg.erb'
   $options = ''
   $service_autorestart = true
   $version = 'present'

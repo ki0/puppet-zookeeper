@@ -30,6 +30,24 @@
 # [*pre_install_java*]
 #   Include java module for install
 #
+# [*servers*]
+#   List of servers for Zookeeper cluster
+#
+# [*myid*]
+#   Zookeeper instance id between 1 to 255
+#
+# [*source_myid_file*]
+#   Custom source file for myid file
+#
+# [*template_myid_file*]
+#   Custom template file for generated myid file
+#
+# [*follower_port*]
+#   Port used by followers to connect to the leader.
+#
+# [*leader_port*]
+#   Port for leader election.
+#
 # Standard class parameters
 # Define the general class behaviour and customizations
 #
@@ -234,6 +252,12 @@ class zookeeper (
   $source_log_file       = params_lookup( 'source_log_file' ),
   $template_log_file     = params_lookup( 'template_log_file' ),
   $pre_install_java      = params_lookup( 'pre_install_java' ),
+  $servers               = params_lookup( 'servers' ),
+  $myid                  = params_lookup( 'myid'),
+  $source_myid_file      = params_lookup( 'source_myid_file' ),
+  $template_myid_file    = params_lookup( 'template_myid_file' ),
+  $follower_port         = params_lookup( 'follower_port' ),
+  $leader_port           = params_lookup( 'leader_port' ),
   $my_class              = params_lookup( 'my_class' ),
   $source                = params_lookup( 'source' ),
   $source_dir            = params_lookup( 'source_dir' ),
@@ -380,6 +404,16 @@ class zookeeper (
     default   => template($zookeeper::template_log_file),
   }
 
+  $manage_myid_file_source = $zookeeper::source_myid_file ? {
+    ''        => undef,
+    default   => $zookeeper::source_myid_file,
+  }
+
+  $manage_myid_file_content = $zookeeper::template_myid_file ? {
+    ''        => undef,
+    default   => template($zookeeper::template_myid_file),
+  }
+
   ### Managed resources
   if $zookeeper::bool_pre_install_java {
     include java
@@ -443,6 +477,23 @@ class zookeeper (
     replace => $zookeeper::manage_file_replace,
     audit   => $zookeeper::manage_audit,
     noop    => $zookeeper::bool_noops,
+  }
+
+  if $zookeeper::myid {
+    file { 'zookeeper.id':
+      ensure  => $zookeeper::manage_file,
+      path    => $zookeeper::config_myid_file,
+      mode    => $zookeeper::config_file_mode,
+      owner   => $zookeeper::config_file_owner,
+      group   => $zookeeper::config_file_group,
+      require => Package[$zookeeper::package],
+      notify  => $zookeeper::manage_service_autorestart,
+      source  => $zookeeper::manage_myid_file_source,
+      content => $zookeeper::manage_myid_file_content,
+      replace => $zookeeper::manage_file_replace,
+      audit   => $zookeeper::manage_audit,
+      noop    => $zookeeper::bool_noops,
+    }
   }
 
   # The whole zookeeper configuration directory can be recursively overriden
