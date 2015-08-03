@@ -7,5 +7,5 @@ dataDir=<%= scope.lookupvar('zookeeper::data_dir') %>
 clientPort=<%= scope.lookupvar('zookeeper::port') %>
 <% i = 1 -%>
 <% @servers.each_with_index do |h, i| -%>
-<%= "server.#{i+1}=#{h}:%s:%s" % [ @election_port, @leader_port ] %>
+<%= "server.#{i+1}=#{h}:%s:%s" % [ @follower_port, @leader_port ] %>
 <% end -%>
