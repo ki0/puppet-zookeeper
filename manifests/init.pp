@@ -36,6 +36,9 @@
 # [*myid*]
 #   Zookeeper instance id between 1 to 255
 #
+# [*config_myid_file*]
+#   Path to  server id file.
+#
 # [*source_myid_file*]
 #   Custom source file for myid file
 #
@@ -254,6 +257,7 @@ class zookeeper (
   $pre_install_java      = params_lookup( 'pre_install_java' ),
   $servers               = params_lookup( 'servers' ),
   $myid                  = params_lookup( 'myid'),
+  $config_myid_file      = params_lookup( 'config_myid_file' ),
   $source_myid_file      = params_lookup( 'source_myid_file' ),
   $template_myid_file    = params_lookup( 'template_myid_file' ),
   $follower_port         = params_lookup( 'follower_port' ),
@@ -569,7 +573,6 @@ class zookeeper (
       noop        => $zookeeper::bool_noops,
     }
   }
-
 
   ### Debugging, if enabled ( debug => true )
   if $zookeeper::bool_debug == true {

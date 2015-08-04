@@ -86,12 +86,12 @@ class zookeeper::params {
   }
 
   $config_env_file = $::operatingsystem ? {
-    /(?i:Debian|Ubuntu:mint)/ => '/etc/zookeeper/conf/zookeeper-env.sh',
-    default                   => '/etc/zookeeper/zookeeper-env.sh'
+    /(?i:Debian|Ubuntu:mint)/ => '/etc/zookeeper/conf/environment',
+    default                   => '/etc/zookeeper/environment'
   }
 
   $source_env_file = ''
-  $template_env_file = 'zookeeper/zookeeper-env.sh.erb'
+  $template_env_file = 'zookeeper/environment.erb'
 
   $config_log_file = $::operatingsystem ? {
     /(?i:Debian|Ubuntu:mint)/ => '/etc/zookeeper/conf/log4j.properties',
@@ -111,7 +111,7 @@ class zookeeper::params {
 
   $myid = ''
   $servers = []
-  $log_mode = 'info'
+  $log_mode = 'INFO'
 
   $pre_install_java = true
 
