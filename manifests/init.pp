@@ -502,7 +502,7 @@ class zookeeper (
     file { "${data_dir}/myid":
       ensure  => link,
       target  => "${config_dir}/myid",
-      require => File[zookeeper.id]
+      require => File['zookeeper.id']
     }
   }
 
