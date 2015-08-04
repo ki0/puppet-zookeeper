@@ -1,12 +1,12 @@
 # File Managed by Puppet
 #
-<% if scope.lookupvar('zookeeper::log_mode') == 'info' %>
+<% if scope.lookupvar('zookeeper::log_mode') == 'INFO' %>
 zookeeper.root.logger=INFO, ROLLINGFILE
 <% end -%>
-<% if scope.lookupvar('zookeeper::log_mode') == 'debug' %>
+<% if scope.lookupvar('zookeeper::log_mode') == 'DEBUG' %>
 zookeeper.root.logger=DEBUG, ROLLINGFILE
 <% end -%>
-<% if scope.lookupvar('zookeeper::log_mode') == 'trace' %>
+<% if scope.lookupvar('zookeeper::log_mode') == 'TRACE' %>
 zookeeper.root.logger=TRACE, ROLLINGFILE
 <% end -%>
 zookeeper.log.dir=<%= scope.lookupvar('zookeeper::log_dir') %>

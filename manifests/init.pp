@@ -498,6 +498,12 @@ class zookeeper (
       audit   => $zookeeper::manage_audit,
       noop    => $zookeeper::bool_noops,
     }
+
+    file { "${data_dir}/myid":
+      ensure  => link,
+      target  => "${config_dir}/myid",
+      require => File[zookeeper.id]
+    }
   }
 
   # The whole zookeeper configuration directory can be recursively overriden
