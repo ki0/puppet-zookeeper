@@ -10,7 +10,7 @@ zookeeper.root.logger=DEBUG, ROLLINGFILE
 zookeeper.root.logger=TRACE, ROLLINGFILE
 <% end -%>
 zookeeper.log.dir=<%= scope.lookupvar('zookeeper::log_dir') %>
-zookeeper.log.file=<%= scope.lookupvar('zookeeper::log_file') %>
+zookeeper.log.file=<%= scope.lookupvar('zookeeper::log_dir') %>/zookeeper.log
 zookeeper.log.threshold=DEBUG
 
 #
