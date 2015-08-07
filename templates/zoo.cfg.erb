@@ -9,3 +9,5 @@ clientPort=<%= scope.lookupvar('zookeeper::port') %>
 <% @servers.each_with_index do |h, i| -%>
 <%= "server.#{i+1}=#{h}:%s:%s" % [ @follower_port, @leader_port ] %>
 <% end -%>
+maxClientCnxns=101487
+
